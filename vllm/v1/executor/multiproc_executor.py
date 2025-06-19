@@ -386,7 +386,7 @@ class WorkerProc:
         proc = context.Process(target=WorkerProc.worker_main,
                                kwargs=process_kwargs,
                                name=f"VllmWorker-{rank}",
-                               daemon=True)
+                               daemon=False)
 
         proc.start()
         writer.close()

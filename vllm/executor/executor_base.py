@@ -199,6 +199,11 @@ class ExecutorBase(ABC):
     def stop_profile(self) -> None:
         self.collective_rpc("stop_profile")
 
+    def get_expert_load(self) -> str:
+        lists_ = self.collective_rpc("get_expert_load")
+        print(f"lt-------{lists_=}")
+        return lists_[0]
+
     def sleep(self, level: int = 1):
         if self.is_sleeping:
             logger.warning("Executor is already sleeping.")

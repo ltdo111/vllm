@@ -37,14 +37,14 @@ class RPCProcessRequest:
     priority: int = 0
 
     def __init__(
-        self,
-        prompt: PromptType,
-        params: Union[SamplingParams, PoolingParams],
-        request_id: str,
-        lora_request: Optional[LoRARequest] = None,
-        trace_headers: Optional[Mapping[str, str]] = None,
-        prompt_adapter_request: Optional[PromptAdapterRequest] = None,
-        priority: int = 0,
+            self,
+            prompt: PromptType,
+            params: Union[SamplingParams, PoolingParams],
+            request_id: str,
+            lora_request: Optional[LoRARequest] = None,
+            trace_headers: Optional[Mapping[str, str]] = None,
+            prompt_adapter_request: Optional[PromptAdapterRequest] = None,
+            priority: int = 0,
     ) -> None:
         super().__init__()
 
@@ -76,6 +76,10 @@ class RPCStartupRequest(Enum):
 @dataclass
 class RPCStartupResponse:
     tracing_enabled: bool
+
+
+class RPCGetExpertLoadRequest(Enum):
+    GET = 1
 
 
 class RPCUProfileRequest(Enum):
@@ -115,6 +119,12 @@ class RPCIsSleepingResponse:
 
 
 @dataclass
+class RPCGetExpertLoadResponse:
+    request_id: str
+    load_data: str
+
+
+@dataclass
 class RPCLoadAdapterRequest:
     lora_request: LoRARequest
     # Set the default value of request_id to a new UUID
@@ -127,13 +137,14 @@ class RPCAdapterLoadedResponse:
 
 
 RPC_REQUEST_T = Union[RPCProcessRequest, RPCAbortRequest, RPCStartupRequest,
-                      RPCUProfileRequest, RPCLoadAdapterRequest,
-                      RPCResetMultiModalCacheRequest,
-                      RPCResetPrefixCacheRequest, RPCSleepRequest,
-                      RPCWakeUpRequest, RPCIsSleepingRequest]
+RPCGetExpertLoadRequest,
+RPCUProfileRequest, RPCLoadAdapterRequest,
+RPCResetMultiModalCacheRequest,
+RPCResetPrefixCacheRequest, RPCSleepRequest,
+RPCWakeUpRequest, RPCIsSleepingRequest]
 
 REQUEST_OUTPUTS_T = Union[List[RequestOutput], RPCAdapterLoadedResponse,
-                          RPCIsSleepingResponse, RPCError]
+RPCIsSleepingResponse, RPCError]
 
 
 def ENGINE_DEAD_ERROR(

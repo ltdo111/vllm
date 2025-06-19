@@ -115,6 +115,9 @@ class EngineCoreClient(ABC):
     def sleep(self, level: int = 1) -> None:
         raise NotImplementedError
 
+    def get_expert_load(self) -> str:
+        raise NotImplementedError
+
     def wake_up(self, tags: Optional[list[str]] = None) -> None:
         raise NotImplementedError
 
@@ -171,6 +174,9 @@ class EngineCoreClient(ABC):
         raise NotImplementedError
 
     async def sleep_async(self, level: int = 1) -> None:
+        raise NotImplementedError
+
+    async def get_expert_load_async(self) -> str:
         raise NotImplementedError
 
     async def wake_up_async(self, tags: Optional[list[str]] = None) -> None:
@@ -247,6 +253,9 @@ class InprocClient(EngineCoreClient):
 
     def sleep(self, level: int = 1) -> None:
         self.engine_core.sleep(level)
+
+    def get_expert_load(self) -> str:
+        return self.engine_core.get_expert_load()
 
     def wake_up(self, tags: Optional[list[str]] = None) -> None:
         self.engine_core.wake_up(tags)
@@ -686,6 +695,9 @@ class SyncMPClient(MPClient):
     def is_sleeping(self) -> bool:
         return self.call_utility("is_sleeping")
 
+    def get_expert_load(self) -> str:
+        return self.call_utility("get_expert_load")
+
     def execute_dummy_batch(self) -> None:
         self.call_utility("execute_dummy_batch")
 
@@ -868,6 +880,10 @@ class AsyncMPClient(MPClient):
 
     async def is_sleeping_async(self) -> bool:
         return await self.call_utility_async("is_sleeping")
+
+    # todo - v1/llm-engine  同步离线测试要做。
+    async def get_expert_load_async(self) -> str:
+        return await self.call_utility_async("get_expert_load")
 
     async def execute_dummy_batch_async(self) -> None:
         await self.call_utility_async("execute_dummy_batch")

@@ -314,6 +314,9 @@ class EngineCore:
     def is_sleeping(self) -> bool:
         return self.model_executor.is_sleeping
 
+    def get_expert_load(self) -> str:
+        return self.model_executor.get_expert_load()
+
     def execute_dummy_batch(self):
         self.model_executor.collective_rpc("execute_dummy_batch")
 

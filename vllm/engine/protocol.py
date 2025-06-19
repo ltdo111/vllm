@@ -286,6 +286,11 @@ class EngineClient(ABC):
         ...
 
     @abstractmethod
+    async def get_expert_load(self) -> None:
+        """ start getting expert_load """
+        ...
+
+    @abstractmethod
     async def reset_mm_cache(self) -> None:
         """Reset the multi-modal cache"""
         ...

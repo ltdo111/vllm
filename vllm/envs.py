@@ -870,6 +870,9 @@ environment_variables: dict[str, Callable[[], Any]] = {
     # processes via zmq.
     "VLLM_MQ_MAX_CHUNK_BYTES_MB":
     lambda: int(os.getenv("VLLM_MQ_MAX_CHUNK_BYTES_MB", "16")),
+
+    "VLLM_ALLOW_EXPERT_LOAD_COLLECTING":
+    lambda: os.getenv("VLLM_ALLOW_EXPERT_LOAD_COLLECTING", None),
 }
 
 # --8<-- [end:env-vars-definition]

@@ -27,7 +27,9 @@ from vllm.engine.multiprocessing import (ENGINE_DEAD_ERROR, IPC_DATA_EXT,
                                          RPCResetPrefixCacheRequest,
                                          RPCSleepRequest, RPCStartupRequest,
                                          RPCStartupResponse,
-                                         RPCUProfileRequest, RPCWakeUpRequest)
+                                         RPCUProfileRequest, RPCWakeUpRequest,
+                                         RPCGetExpertLoadRequest,
+                                         RPCGetExpertLoadResponse)
 # yapf: enable
 from vllm.logger import init_logger
 from vllm.outputs import RequestOutput
@@ -284,6 +286,8 @@ class MQLLMEngine:
                     self.wake_up(request.tags)
                 elif isinstance(request, RPCIsSleepingRequest):
                     self._handle_is_sleeping_request(request)
+                elif isinstance(request, RPCGetExpertLoadRequest):
+                    self._handle_get_expert_load_request(request)
                 else:
                     raise ValueError("Unknown RPCRequest Type: "
                                      f"{type(request)}")
@@ -354,7 +358,13 @@ class MQLLMEngine:
         is_sleeping = self.is_sleeping()
         self._send_outputs(
             RPCIsSleepingResponse(request_id=request.request_id,
-                                  is_sleeping=is_sleeping))
+                                  load_data=is_sleeping))
+
+    def _handle_get_expert_load_request(self, request: RPCGetExpertLoadRequest):
+        load_data = self.get_expert_load()
+        self._send_outputs(
+            RPCGetExpertLoadResponse(request_id=request.request_id,
+                                  load_data=load_data))
 
     def _health_check(self):
         # Send unhealthy if engine has already errored
@@ -431,6 +441,8 @@ class MQLLMEngine:
     def is_sleeping(self) -> bool:
         return self.engine.is_sleeping()
 
+    def get_expert_load(self) -> str:
+        return self.engine.get_expert_load()
 
 def signal_handler(*_) -> None:
     raise KeyboardInterrupt("MQLLMEngine terminated")
