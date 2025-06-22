@@ -992,7 +992,6 @@ if envs.VLLM_ALLOW_EXPERT_LOAD_COLLECTING:
 
         return JSONResponse(content=expert_load)
 
-
     @router.post("/update_expert_load_statistical_period")
     async def update_expert_load_statistical_period(period_request: UpdateExpertLoadStatisticalPeriodRequest,
                                                     raw_request: Request):

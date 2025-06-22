@@ -201,7 +201,7 @@ class ExecutorBase(ABC):
 
     def get_expert_load(self) -> str:
         lists_ = self.collective_rpc("get_expert_load")
-        print(f"lt-------{lists_=}")
+        print(f"lt-------{lists_=} ")
         return lists_[0]
 
     def update_expert_load_statistical_period(self, num_expert_load_gather: int, num_iterations: int) -> None:

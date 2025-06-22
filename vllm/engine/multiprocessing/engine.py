@@ -291,7 +291,7 @@ class MQLLMEngine:
                     self._handle_get_expert_load_request(request)
                 elif isinstance(request, RPCUpdateExpertLoadStatisticalPeriodRequest):
                     print("安达市大所大所多 ")
-                    self.update_expert_load_statistical_period(request)
+                    self._update_expert_load_statistical_period(request)
                 else:
                     raise ValueError("Unknown RPCRequest Type: "
                                      f"{type(request)}")
@@ -370,7 +370,7 @@ class MQLLMEngine:
             RPCGetExpertLoadResponse(request_id=request.request_id,
                                   load_data=load_data))
 
-    def update_expert_load_statistical_period(self, request:RPCUpdateExpertLoadStatisticalPeriodRequest):
+    def _update_expert_load_statistical_period(self, request:RPCUpdateExpertLoadStatisticalPeriodRequest):
         num_expert_load_gather = request.num_expert_load_gather
         num_iterations = request.num_iterations
         self.engine.update_expert_load_statistical_period(num_expert_load_gather, num_iterations)

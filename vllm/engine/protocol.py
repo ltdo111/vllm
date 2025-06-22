@@ -287,7 +287,7 @@ class EngineClient(ABC):
 
     @abstractmethod
     async def get_expert_load(self) -> None:
-        """ Start getting expert_load """
+        """ Start getting expert_load  """
         ...
 
     @abstractmethod
