@@ -281,6 +281,10 @@ class LLMEngine:
     def get_expert_load(self) -> str:
         return self.engine_core.get_expert_load()
 
+    def update_expert_load_statistical_period_async(self, num_expert_load_gather: int, num_iterations: int) -> None:
+        print('lttttttt')
+        self.engine_core.update_expert_load_statistical_period(num_expert_load_gather, num_iterations)
+
     def get_metrics(self) -> list[Metric]:
         assert self.log_stats, "Stat logging disabled"
         return get_metrics_snapshot()

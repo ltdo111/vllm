@@ -73,7 +73,8 @@ from vllm.entrypoints.openai.protocol import (ChatCompletionRequest,
                                               TokenizeResponse,
                                               TranscriptionRequest,
                                               TranscriptionResponse,
-                                              UnloadLoRAAdapterRequest)
+                                              UnloadLoRAAdapterRequest,
+                                              UpdateExpertLoadStatisticalPeriodRequest)
 # yapf: enable
 from vllm.entrypoints.openai.serving_chat import OpenAIServingChat
 from vllm.entrypoints.openai.serving_classification import (
@@ -990,6 +991,23 @@ if envs.VLLM_ALLOW_EXPERT_LOAD_COLLECTING:
         logger.info("Get expert load success!!!")
 
         return JSONResponse(content=expert_load)
+
+
+    @router.post("/update_expert_load_statistical_period")
+    async def update_expert_load_statistical_period(period_request: UpdateExpertLoadStatisticalPeriodRequest,
+                                                    raw_request: Request):
+        """Update expert load statistical period"""
+        logger.info("period_request %s", period_request)
+        num_expert_load_gather = period_request.num_expert_load_gather
+        num_iterations = period_request.num_iterations
+
+        logger.info("Starting update expert load statistical period...")
+        await engine_client(raw_request).update_expert_load_statistical_period(num_iterations,
+                                                                                             num_expert_load_gather)
+        logger.info("Starting update expert load statistical period success!!!")
+
+        return Response(status_code=200)
+
 
 if envs.VLLM_ALLOW_RUNTIME_LORA_UPDATING:
     logger.warning(

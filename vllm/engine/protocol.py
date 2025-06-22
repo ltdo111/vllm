@@ -287,7 +287,12 @@ class EngineClient(ABC):
 
     @abstractmethod
     async def get_expert_load(self) -> None:
-        """ start getting expert_load """
+        """ Start getting expert_load """
+        ...
+
+    @abstractmethod
+    async def update_expert_load_statistical_period(self,  num_expert_load_gather: int, num_iterations: int) -> None:
+        """ Update expert load statistical period """
         ...
 
     @abstractmethod

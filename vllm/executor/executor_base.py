@@ -204,6 +204,12 @@ class ExecutorBase(ABC):
         print(f"lt-------{lists_=}")
         return lists_[0]
 
+    def update_expert_load_statistical_period(self, num_expert_load_gather: int, num_iterations: int) -> None:
+        logger.info("lt - begin update_expert_load_statistical_period success !! ")
+        self.collective_rpc("update_expert_load_statistical_period", args=(num_expert_load_gather,
+                                                                           num_iterations,))
+        logger.info("lt - update_expert_load_statistical_period success ")
+
     def sleep(self, level: int = 1):
         if self.is_sleeping:
             logger.warning("Executor is already sleeping.")

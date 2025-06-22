@@ -30,7 +30,7 @@ from vllm.version import __version__ as VLLM_VERSION
 
 logger = init_logger("vllm.entrypoints.api_server")
 
-app = FastAPI()
+app = FastAPI(debug=True)
 engine = None
 
 

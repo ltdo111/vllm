@@ -872,7 +872,7 @@ environment_variables: dict[str, Callable[[], Any]] = {
     lambda: int(os.getenv("VLLM_MQ_MAX_CHUNK_BYTES_MB", "16")),
 
     "VLLM_ALLOW_EXPERT_LOAD_COLLECTING":
-    lambda: os.getenv("VLLM_ALLOW_EXPERT_LOAD_COLLECTING", None),
+    lambda: bool(int(os.getenv("VLLM_ALLOW_EXPERT_LOAD_COLLECTING", "0"))),
 }
 
 # --8<-- [end:env-vars-definition]

@@ -35,7 +35,8 @@ from vllm.engine.multiprocessing import (ENGINE_DEAD_ERROR, IPC_DATA_EXT,
                                          RPCResetPrefixCacheRequest,
                                          RPCSleepRequest, RPCStartupRequest,
                                          RPCStartupResponse,
-                                         RPCUProfileRequest, RPCWakeUpRequest, RPCGetExpertLoadRequest)
+                                         RPCUProfileRequest, RPCWakeUpRequest, RPCGetExpertLoadRequest,
+                                         RPCUpdateExpertLoadStatisticalPeriodRequest)
 from vllm.engine.protocol import EngineClient
 # yapf: enable
 from vllm.envs import VLLM_RPC_TIMEOUT
@@ -617,10 +618,18 @@ class MQLLMEngineClient(EngineClient):
             request=RPCUProfileRequest.STOP_PROFILE, socket=self.input_socket)
 
     async def get_expert_load(self) -> None:
-        """Starting get expert load todo - 验证 return 是否能拿到数据"""
+        """Starting get expert load"""
         return await self._send_one_way_rpc_request(
             request=RPCGetExpertLoadRequest.GET,
             socket=self.input_socket)
+
+    async def update_expert_load_statistical_period(self, num_expert_load_gather: int, num_iterations: int) -> None:
+        """update expert load statistical period"""
+        print('lt - mutil process update_expert_load_statistical_period begin ')
+        await self._send_one_way_rpc_request(
+            request=RPCUpdateExpertLoadStatisticalPeriodRequest(num_expert_load_gather, num_iterations),
+            socket=self.input_socket)
+        print('lt - mutil process update_expert_load_statistical_period end')
 
     async def reset_mm_cache(self) -> None:
         """Reset the multi-modal cache"""

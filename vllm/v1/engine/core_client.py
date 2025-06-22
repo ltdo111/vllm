@@ -118,6 +118,9 @@ class EngineCoreClient(ABC):
     def get_expert_load(self) -> str:
         raise NotImplementedError
 
+    def update_expert_load_statistical_period(self, num_expert_load_gather: int, num_iterations: int) -> None:
+        raise NotImplementedError
+
     def wake_up(self, tags: Optional[list[str]] = None) -> None:
         raise NotImplementedError
 
@@ -177,6 +180,9 @@ class EngineCoreClient(ABC):
         raise NotImplementedError
 
     async def get_expert_load_async(self) -> str:
+        raise NotImplementedError
+
+    async def update_expert_load_statistical_period_async(self, num_expert_load_gather: int, num_iterations: int) -> None:
         raise NotImplementedError
 
     async def wake_up_async(self, tags: Optional[list[str]] = None) -> None:
@@ -256,6 +262,9 @@ class InprocClient(EngineCoreClient):
 
     def get_expert_load(self) -> str:
         return self.engine_core.get_expert_load()
+
+    def update_expert_load_statistical_period(self, num_expert_load_gather: int, num_iterations: int) -> None:
+        self.engine_core.update_expert_load_statistical_period_async(num_expert_load_gather, num_iterations)
 
     def wake_up(self, tags: Optional[list[str]] = None) -> None:
         self.engine_core.wake_up(tags)
@@ -698,6 +707,9 @@ class SyncMPClient(MPClient):
     def get_expert_load(self) -> str:
         return self.call_utility("get_expert_load")
 
+    def update_expert_load_statistical_period(self, num_expert_load_gather: int, num_iterations: int) -> None:
+       self.call_utility("update_expert_load_statistical_period", num_expert_load_gather, num_iterations)
+
     def execute_dummy_batch(self) -> None:
         self.call_utility("execute_dummy_batch")
 
@@ -884,6 +896,10 @@ class AsyncMPClient(MPClient):
     # todo - v1/llm-engine  同步离线测试要做。
     async def get_expert_load_async(self) -> str:
         return await self.call_utility_async("get_expert_load")
+
+    async def update_expert_load_statistical_period_async(self, num_expert_load_gather: int, num_iterations: int) -> None:
+        await self.call_utility_async("update_expert_load_statistical_period", num_expert_load_gather,
+                                      num_iterations)
 
     async def execute_dummy_batch_async(self) -> None:
         await self.call_utility_async("execute_dummy_batch")

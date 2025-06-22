@@ -81,6 +81,11 @@ class RPCStartupResponse:
 class RPCGetExpertLoadRequest(Enum):
     GET = 1
 
+@dataclass
+class RPCUpdateExpertLoadStatisticalPeriodRequest:
+    num_expert_load_gather: int
+    num_iterations: int
+
 
 class RPCUProfileRequest(Enum):
     START_PROFILE = 1
@@ -137,7 +142,7 @@ class RPCAdapterLoadedResponse:
 
 
 RPC_REQUEST_T = Union[RPCProcessRequest, RPCAbortRequest, RPCStartupRequest,
-RPCGetExpertLoadRequest,
+RPCGetExpertLoadRequest,RPCUpdateExpertLoadStatisticalPeriodRequest,
 RPCUProfileRequest, RPCLoadAdapterRequest,
 RPCResetMultiModalCacheRequest,
 RPCResetPrefixCacheRequest, RPCSleepRequest,
