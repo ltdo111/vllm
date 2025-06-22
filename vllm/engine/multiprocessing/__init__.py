@@ -126,7 +126,7 @@ class RPCIsSleepingResponse:
 @dataclass
 class RPCGetExpertLoadResponse:
     request_id: str
-    load_data: str
+    expert_load: str
 
 
 @dataclass
@@ -134,7 +134,6 @@ class RPCLoadAdapterRequest:
     lora_request: LoRARequest
     # Set the default value of request_id to a new UUID
     request_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-
 
 @dataclass
 class RPCAdapterLoadedResponse:
