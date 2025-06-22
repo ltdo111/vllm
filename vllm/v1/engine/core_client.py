@@ -264,7 +264,7 @@ class InprocClient(EngineCoreClient):
         return self.engine_core.get_expert_load()
 
     def update_expert_load_statistical_period(self, num_expert_load_gather: int, num_iterations: int) -> None:
-        self.engine_core.update_expert_load_statistical_period_async(num_expert_load_gather, num_iterations)
+        self.engine_core.update_expert_load_statistical_period(num_expert_load_gather, num_iterations)
 
     def wake_up(self, tags: Optional[list[str]] = None) -> None:
         self.engine_core.wake_up(tags)

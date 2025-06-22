@@ -362,7 +362,7 @@ class MQLLMEngine:
         is_sleeping = self.is_sleeping()
         self._send_outputs(
             RPCIsSleepingResponse(request_id=request.request_id,
-                                  load_data=is_sleeping))
+                                  is_sleeping=is_sleeping))
 
     def _handle_get_expert_load_request(self, request: RPCGetExpertLoadRequest):
         load_data = self.get_expert_load()

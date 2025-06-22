@@ -517,7 +517,7 @@ class AsyncLLM(EngineClient):
         return await self.engine_core.get_expert_load_async()
 
     async def update_expert_load_statistical_period(self, num_expert_load_gather: int, num_iterations: int) -> None:
-       await self.engine_core.update_expert_load_statistical_period(num_expert_load_gather, num_iterations)
+       await self.engine_core.update_expert_load_statistical_period_async(num_expert_load_gather, num_iterations)
 
     async def add_lora(self, lora_request: LoRARequest) -> bool:
         """Load a new LoRA adapter into the engine for future requests."""
