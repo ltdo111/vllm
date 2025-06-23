@@ -37,13 +37,13 @@ class RPCProcessRequest:
     priority: int = 0
 
     def __init__(
-            self,
-            prompt: PromptType,
-            params: Union[SamplingParams, PoolingParams],
-            request_id: str,
-            lora_request: Optional[LoRARequest] = None,
-            trace_headers: Optional[Mapping[str, str]] = None,
-            prompt_adapter_request: Optional[PromptAdapterRequest] = None,
+        self,
+        prompt: PromptType,
+        params: Union[SamplingParams, PoolingParams],
+        request_id: str,
+        lora_request: Optional[LoRARequest] = None,
+        trace_headers: Optional[Mapping[str, str]] = None,
+        prompt_adapter_request: Optional[PromptAdapterRequest] = None,
             priority: int = 0,
     ) -> None:
         super().__init__()
@@ -135,20 +135,21 @@ class RPCLoadAdapterRequest:
     # Set the default value of request_id to a new UUID
     request_id: str = field(default_factory=lambda: str(uuid.uuid4()))
 
+
 @dataclass
 class RPCAdapterLoadedResponse:
     request_id: str
 
 
 RPC_REQUEST_T = Union[RPCProcessRequest, RPCAbortRequest, RPCStartupRequest,
-RPCGetExpertLoadRequest,RPCUpdateExpertLoadStatisticalPeriodRequest,
-RPCUProfileRequest, RPCLoadAdapterRequest,
-RPCResetMultiModalCacheRequest,
-RPCResetPrefixCacheRequest, RPCSleepRequest,
-RPCWakeUpRequest, RPCIsSleepingRequest]
+                      RPCGetExpertLoadRequest,RPCUpdateExpertLoadStatisticalPeriodRequest,
+                      RPCUProfileRequest, RPCLoadAdapterRequest,
+                      RPCResetMultiModalCacheRequest,
+                      RPCResetPrefixCacheRequest, RPCSleepRequest,
+                      RPCWakeUpRequest, RPCIsSleepingRequest]
 
 REQUEST_OUTPUTS_T = Union[List[RequestOutput], RPCAdapterLoadedResponse,
-RPCIsSleepingResponse, RPCError]
+                          RPCIsSleepingResponse, RPCError]
 
 
 def ENGINE_DEAD_ERROR(
