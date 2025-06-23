@@ -893,7 +893,6 @@ class AsyncMPClient(MPClient):
     async def is_sleeping_async(self) -> bool:
         return await self.call_utility_async("is_sleeping")
 
-    # todo - v1/llm-engine  同步离线测试要做。
     async def get_expert_load_async(self) -> str:
         return await self.call_utility_async("get_expert_load")
 

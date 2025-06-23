@@ -145,8 +145,8 @@ async def lifespan(app: FastAPI):
 
 @asynccontextmanager
 async def build_async_engine_client(
-        args: Namespace,
-        client_config: Optional[dict[str, Any]] = None,
+    args: Namespace,
+    client_config: Optional[dict[str, Any]] = None,
 ) -> AsyncIterator[EngineClient]:
     # Context manager to handle engine_client lifecycle
     # Ensures everything is shutdown and cleaned up on error/exit
@@ -160,9 +160,9 @@ async def build_async_engine_client(
 
 @asynccontextmanager
 async def build_async_engine_client_from_engine_args(
-        engine_args: AsyncEngineArgs,
-        disable_frontend_multiprocessing: bool = False,
-        client_config: Optional[dict[str, Any]] = None,
+    engine_args: AsyncEngineArgs,
+    disable_frontend_multiprocessing: bool = False,
+    client_config: Optional[dict[str, Any]] = None,
 ) -> AsyncIterator[EngineClient]:
     """
     Create EngineClient, either:
@@ -754,7 +754,7 @@ async def create_score_v1(request: ScoreRequest, raw_request: Request):
 @load_aware_call
 async def create_transcriptions(raw_request: Request,
                                 request: Annotated[TranscriptionRequest,
-                                Form()]):
+                                                   Form()]):
     handler = transcription(raw_request)
     if handler is None:
         return base(raw_request).create_error_response(
@@ -868,7 +868,6 @@ if envs.VLLM_SERVER_DEV_MODE:
         server_info = {"vllm_config": str(raw_request.app.state.vllm_config)}
         return JSONResponse(content=server_info)
 
-
     @router.post("/reset_prefix_cache")
     async def reset_prefix_cache(raw_request: Request):
         """
@@ -882,8 +881,6 @@ if envs.VLLM_SERVER_DEV_MODE:
         logger.info("Resetting prefix cache with specific %s...", str(device))
         await engine_client(raw_request).reset_prefix_cache(device)
         return Response(status_code=200)
-
-
     @router.post("/sleep")
     async def sleep(raw_request: Request):
         # get POST params
@@ -892,8 +889,6 @@ if envs.VLLM_SERVER_DEV_MODE:
         # FIXME: in v0 with frontend multiprocessing, the sleep command
         # is sent but does not finish yet when we return a response.
         return Response(status_code=200)
-
-
     @router.post("/wake_up")
     async def wake_up(raw_request: Request):
         tags = raw_request.query_params.getlist("tags")
@@ -905,8 +900,6 @@ if envs.VLLM_SERVER_DEV_MODE:
         # FIXME: in v0 with frontend multiprocessing, the wake-up command
         # is sent but does not finish yet when we return a response.
         return Response(status_code=200)
-
-
     @router.get("/is_sleeping")
     async def is_sleeping(raw_request: Request):
         logger.info("check whether the engine is sleeping")
@@ -943,7 +936,7 @@ async def invocations(raw_request: Request):
         raise HTTPException(
             status_code=400,
             detail=f"Unsupported task: '{task}' for '/invocations'. "
-                   f"Expected one of {set(TASK_HANDLERS.keys())}")
+            f"Expected one of {set(TASK_HANDLERS.keys())}")
 
     handler_config = TASK_HANDLERS[task]
     if "messages" in body:
@@ -968,8 +961,6 @@ if envs.VLLM_TORCH_PROFILER_DIR:
         await engine_client(raw_request).start_profile()
         logger.info("Profiler started.")
         return Response(status_code=200)
-
-
     @router.post("/stop_profile")
     async def stop_profile(raw_request: Request):
         logger.info("Stopping profiler...")
@@ -981,8 +972,6 @@ if envs.VLLM_ALLOW_EXPERT_LOAD_COLLECTING:
     """
     Added eplb load collection interface 
     """
-
-
     @router.get("/get_expert_load")
     async def get_expert_load(raw_request: Request):
         """Get expert load"""
@@ -1013,7 +1002,6 @@ if envs.VLLM_ALLOW_RUNTIME_LORA_UPDATING:
         "LoRA dynamic loading & unloading is enabled in the API server. "
         "This should ONLY be used for local development!")
 
-
     @router.post("/v1/load_lora_adapter",
                  dependencies=[Depends(validate_json_request)])
     async def load_lora_adapter(request: LoadLoRAAdapterRequest,
@@ -1025,7 +1013,6 @@ if envs.VLLM_ALLOW_RUNTIME_LORA_UPDATING:
                                 status_code=response.code)
 
         return Response(status_code=200, content=response)
-
 
     @router.post("/v1/unload_lora_adapter",
                  dependencies=[Depends(validate_json_request)])
@@ -1158,10 +1145,10 @@ def build_app(args: Namespace) -> FastAPI:
 
 
 async def init_app_state(
-        engine_client: EngineClient,
-        vllm_config: VllmConfig,
-        state: State,
-        args: Namespace,
+    engine_client: EngineClient,
+    vllm_config: VllmConfig,
+    state: State,
+    args: Namespace,
 ) -> None:
     if args.served_model_name is not None:
         served_model_names = args.served_model_name
@@ -1257,7 +1244,7 @@ async def init_app_state(
         model_config,
         state.openai_serving_models,
         request_logger=request_logger) if model_config.task in (
-        "score", "embed", "pooling") else None
+            "score", "embed", "pooling") else None
     state.openai_serving_classification = ServingClassification(
         engine_client,
         model_config,
@@ -1312,7 +1299,7 @@ def validate_api_server_args(args):
 
     valid_reasoning_parses = ReasoningParserManager.reasoning_parsers.keys()
     if args.reasoning_parser \
-            and args.reasoning_parser not in valid_reasoning_parses:
+        and args.reasoning_parser not in valid_reasoning_parses:
         raise KeyError(
             f"invalid reasoning parser: {args.reasoning_parser} "
             f"(chose from {{ {','.join(valid_reasoning_parses)} }})")

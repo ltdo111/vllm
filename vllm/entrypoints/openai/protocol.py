@@ -1212,7 +1212,6 @@ class RerankResult(BaseModel):
 class RerankUsage(BaseModel):
     total_tokens: int
 
-
 class UpdateExpertLoadStatisticalPeriodRequest(BaseModel):
     num_expert_load_gather: int
     num_iterations: int

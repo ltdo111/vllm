@@ -871,6 +871,11 @@ environment_variables: dict[str, Callable[[], Any]] = {
     "VLLM_MQ_MAX_CHUNK_BYTES_MB":
     lambda: int(os.getenv("VLLM_MQ_MAX_CHUNK_BYTES_MB", "16")),
 
+    # Control whether to collect expert load data when the system's dynamic EPLB (Expert Placement and Load Balancing) feature is enabled.
+    # Enabling this will allow the system to gather load statistics for each expert, which can be used to optimize
+    # expert placement and improve load balancing efficiency. Disabling this may reduce overhead but will also
+    # prevent the system from making data-driven adjustments.
+    # note: just support when VLLM_USE_V1=1.
     "VLLM_ALLOW_EXPERT_LOAD_COLLECTING":
     lambda: bool(int(os.getenv("VLLM_ALLOW_EXPERT_LOAD_COLLECTING", "0"))),
 }

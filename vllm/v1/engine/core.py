@@ -318,10 +318,7 @@ class EngineCore:
         return self.model_executor.get_expert_load()
 
     def update_expert_load_statistical_period(self, num_expert_load_gather: int, num_iterations: int) -> None:
-        logger.info('lt - core.py start update_expert_load_statistical_period... ')
         self.model_executor.update_expert_load_statistical_period(num_expert_load_gather, num_iterations)
-        logger.info('lt - core.py update_expert_load_statistical_period end... ')
-
 
     def execute_dummy_batch(self):
         self.model_executor.collective_rpc("execute_dummy_batch")

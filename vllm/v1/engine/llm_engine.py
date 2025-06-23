@@ -282,7 +282,6 @@ class LLMEngine:
         return self.engine_core.get_expert_load()
 
     def update_expert_load_statistical_period(self, num_expert_load_gather: int, num_iterations: int):
-        print('lttttttt')
         self.engine_core.update_expert_load_statistical_period(num_expert_load_gather, num_iterations)
 
     def get_metrics(self) -> list[Metric]:
