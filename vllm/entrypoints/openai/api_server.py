@@ -981,7 +981,7 @@ if envs.VLLM_ALLOW_EXPERT_LOAD_COLLECTING:
         """Get expert load"""
         logger.info("Starting get expert load...")
         expert_load = await engine_client(raw_request).get_expert_load()
-        logger.info("Get expert load success!!!")
+        logger.info("Get expert load end.")
 
         return JSONResponse(content={"expert_load": expert_load})
 
@@ -989,14 +989,13 @@ if envs.VLLM_ALLOW_EXPERT_LOAD_COLLECTING:
     async def update_expert_load_statistical_period(period_request: UpdateExpertLoadStatisticalPeriodRequest,
                                                     raw_request: Request):
         """Update expert load statistical period"""
-        logger.info("period_request %s", period_request)
         num_expert_load_gather = period_request.num_expert_load_gather
         num_iterations = period_request.num_iterations
 
         logger.info("Starting update expert load statistical period...")
         await engine_client(raw_request).update_expert_load_statistical_period(num_iterations,
-                                                                                             num_expert_load_gather)
-        logger.info("Starting update expert load statistical period success!!!")
+                                                                               num_expert_load_gather)
+        logger.info("update expert load statistical period end.")
 
         return Response(status_code=200)
 
