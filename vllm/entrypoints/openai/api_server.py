@@ -990,7 +990,7 @@ if envs.VLLM_ALLOW_EXPERT_LOAD_COLLECTING:
         expert_load = await engine_client(raw_request).get_expert_load()
         logger.info("Get expert load success!!!")
 
-        return JSONResponse(content=expert_load)
+        return JSONResponse(content={"expert_load": expert_load})
 
     @router.post("/update_expert_load_statistical_period")
     async def update_expert_load_statistical_period(period_request: UpdateExpertLoadStatisticalPeriodRequest,
