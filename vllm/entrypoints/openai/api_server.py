@@ -148,6 +148,7 @@ async def build_async_engine_client(
     args: Namespace,
     client_config: Optional[dict[str, Any]] = None,
 ) -> AsyncIterator[EngineClient]:
+
     # Context manager to handle engine_client lifecycle
     # Ensures everything is shutdown and cleaned up on error/exit
     engine_args = AsyncEngineArgs.from_cli_args(args)
@@ -881,6 +882,7 @@ if envs.VLLM_SERVER_DEV_MODE:
         logger.info("Resetting prefix cache with specific %s...", str(device))
         await engine_client(raw_request).reset_prefix_cache(device)
         return Response(status_code=200)
+
     @router.post("/sleep")
     async def sleep(raw_request: Request):
         # get POST params
@@ -889,6 +891,7 @@ if envs.VLLM_SERVER_DEV_MODE:
         # FIXME: in v0 with frontend multiprocessing, the sleep command
         # is sent but does not finish yet when we return a response.
         return Response(status_code=200)
+
     @router.post("/wake_up")
     async def wake_up(raw_request: Request):
         tags = raw_request.query_params.getlist("tags")
@@ -900,6 +903,7 @@ if envs.VLLM_SERVER_DEV_MODE:
         # FIXME: in v0 with frontend multiprocessing, the wake-up command
         # is sent but does not finish yet when we return a response.
         return Response(status_code=200)
+
     @router.get("/is_sleeping")
     async def is_sleeping(raw_request: Request):
         logger.info("check whether the engine is sleeping")
@@ -954,13 +958,13 @@ if envs.VLLM_TORCH_PROFILER_DIR:
         "Torch Profiler is enabled in the API server. This should ONLY be "
         "used for local development!")
 
-
     @router.post("/start_profile")
     async def start_profile(raw_request: Request):
         logger.info("Starting profiler...")
         await engine_client(raw_request).start_profile()
         logger.info("Profiler started.")
         return Response(status_code=200)
+
     @router.post("/stop_profile")
     async def stop_profile(raw_request: Request):
         logger.info("Stopping profiler...")
