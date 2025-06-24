@@ -875,7 +875,7 @@ environment_variables: dict[str, Callable[[], Any]] = {
     # Enabling this will allow the system to gather load statistics for each expert, which can be used to optimize
     # expert placement and improve load balancing efficiency. Disabling this may reduce overhead but will also
     # prevent the system from making data-driven adjustments.
-    # note: just support when VLLM_USE_V1=1.
+    # note: just support when use VLLM_USE_V1=1 and system opens the feature of dynamic EPLB.
     "VLLM_ALLOW_EXPERT_LOAD_COLLECTING":
     lambda: bool(int(os.getenv("VLLM_ALLOW_EXPERT_LOAD_COLLECTING", "0"))),
 }
