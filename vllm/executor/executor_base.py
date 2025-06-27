@@ -7,6 +7,7 @@ from abc import ABC, abstractmethod
 from typing import (Any, Awaitable, Callable, Dict, List, Optional, Set, Tuple,
                     Union)
 
+import json
 import torch.nn as nn
 from typing_extensions import TypeVar
 
@@ -19,6 +20,7 @@ from vllm.prompt_adapter.request import PromptAdapterRequest
 from vllm.sequence import ExecuteModelRequest, PoolerOutput
 from vllm.utils import make_async
 from vllm.worker.worker_base import WorkerBase
+
 
 logger = init_logger(__name__)
 
@@ -201,7 +203,27 @@ class ExecutorBase(ABC):
 
     def get_expert_load(self) -> str:
         lists_ = self.collective_rpc("get_expert_load")
-        return lists_[0]
+        # return Tensor
+        load_info = lists_[0]
+        # if not load_info:
+        #     return json.dumps({"expert_load": {}})
+
+        L, W, _ = load_info.shape
+
+        expert_load: Dict[str, List[dict]] = {}
+        for c in range(W):
+            layers: List[dict] = []
+            for l in range(L):
+                counts_1d = load_info[l, c]
+
+                layer_val = {
+                    f"expert_{e}": int(v)
+                    for e, v in enumerate(counts_1d.tolist())
+                }
+                layers.append({f"layer_{l}": layer_val})
+            expert_load[f"card_{c}"] = layers
+
+        return json.dumps({"expert_load": expert_load})
 
     def update_expert_load_statistical_period(self, num_expert_load_gather: int, num_iterations: int) -> None:
         self.collective_rpc("update_expert_load_statistical_period", args=(num_expert_load_gather,
