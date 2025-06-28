@@ -8,6 +8,7 @@ from typing import (Any, Awaitable, Callable, Dict, List, Optional, Set, Tuple,
                     Union)
 
 import json
+import torch
 import torch.nn as nn
 from typing_extensions import TypeVar
 
@@ -201,30 +202,59 @@ class ExecutorBase(ABC):
     def stop_profile(self) -> None:
         self.collective_rpc("stop_profile")
 
-    def get_expert_load(self) -> str:
-        lists_ = self.collective_rpc("get_expert_load")
-        # return Tensor
-        load_info = lists_[0]
-        # if not load_info:
-        #     return json.dumps({"expert_load": {}})
+    def _global2local_load(self,
+        workload: torch.Tensor,
+        placement: torch.Tensor,
+        E_local: int
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        L, G, _ = placement.shape
+        device = placement.device
 
+        wt_local = torch.full((L, G, E_local),
+                              fill_value=-1,
+                              dtype=workload.dtype,
+                              device=device)
+        pt_local = torch.full((L, G, E_local),
+                              fill_value=-1,
+                              dtype=torch.long,
+                              device=device)
+
+        valid = placement >= 0
+        l_idx, g_idx, k_idx = valid.nonzero(as_tuple=True)
+
+        slot_idx = placement[l_idx, g_idx, k_idx]
+        values = workload[l_idx, g_idx, k_idx]
+
+        wt_local[l_idx, g_idx, slot_idx] = values
+
+        pt_local[l_idx, g_idx, slot_idx] = k_idx
+
+        return wt_local, pt_local
+
+    def _get_expert_load_by_factor(self, moe_load, expert_maps, num_local_experts) -> str:
+        load_info, _ = self._global2local_load(moe_load, expert_maps, num_local_experts)
         L, W, _ = load_info.shape
+        expert_load: List[List[List[int]]] = []
 
-        expert_load: Dict[str, List[dict]] = {}
         for c in range(W):
-            layers: List[dict] = []
+            layers: List[list[[int]]] = []
             for l in range(L):
                 counts_1d = load_info[l, c]
 
-                layer_val = {
-                    f"expert_{e}": int(v)
-                    for e, v in enumerate(counts_1d.tolist())
-                }
-                layers.append({f"layer_{l}": layer_val})
-            expert_load[f"card_{c}"] = layers
-
-        return json.dumps({"expert_load": expert_load})
-
+                # layer_val = {
+                #    f"expert_{e}": int(v)
+                #    for e, v in enumerate(counts_1d.tolist())
+                # }
+                layer_val = [int(v) for e, v in enumerate(counts_1d.tolist())]
+                # layers.append({f"layer_{l}": layer_val})
+                layers.append(layer_val)
+            # expert_load[f"card_{c}"] = layers
+            expert_load.append(layers)
+        return json.dumps(expert_load)
+    def get_expert_load(self) -> str:
+        lists_ = self.collective_rpc("get_expert_load")
+        moe_load, expert_maps, num_local_experts = lists_[0]
+        return self._get_expert_load_by_factor(moe_load, expert_maps, num_local_experts)
     def update_expert_load_statistical_period(self, num_expert_load_gather: int, num_iterations: int) -> None:
         self.collective_rpc("update_expert_load_statistical_period", args=(num_expert_load_gather,
                                                                            num_iterations,))
